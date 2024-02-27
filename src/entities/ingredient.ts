@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, OneToOne } from "typeorm"
+import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 
 import { IngredientUnits } from "./ingredient_units"
@@ -15,11 +15,17 @@ class Ingredient {
   @Column()
   category: string
 
-  @OneToOne(() => IngredientUnits)
-  units_id: IngredientUnits
+  @OneToOne(type => IngredientUnits, {
+    cascade: true,
+  })
+  @JoinColumn()
+  units: IngredientUnits
 
-  @OneToOne(() => IngredientMeasurements)
-  measurements_id: IngredientMeasurements
+  @OneToOne(type => IngredientMeasurements, {
+    cascade: true,
+  })
+  @JoinColumn()
+  measurements: IngredientMeasurements
 
   constructor() {
     if (!this.id) {
