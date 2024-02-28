@@ -1,8 +1,6 @@
 import { Entity, PrimaryColumn, Column } from "typeorm"
 import { v4 as uuid } from "uuid"
 
-import { Ingredient } from "./ingredient"
-
 @Entity("ingredient_measurements")
 class IngredientMeasurements {
   @PrimaryColumn()

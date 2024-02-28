@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne } from "typeorm"
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 
 import { Recipe } from "./recipe"
@@ -8,8 +8,10 @@ class RecipeInstruction {
   @PrimaryColumn()
   readonly id: string
 
-  @ManyToOne(() => Recipe)
-  recipe_id: Recipe
+  @ManyToOne(type => Recipe, recipe => recipe.instructions, {
+    eager: true,
+  })
+  recipe: Recipe
 
   @Column()
   name: string

@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne } from "typeorm"
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 
 import { Ingredient } from "./ingredient"
@@ -9,11 +9,17 @@ class RecipeIngredient {
   @PrimaryColumn()
   readonly id: string
 
-  @ManyToOne(() => Recipe)
-  recipe_id: Recipe
+  @ManyToOne(type => Recipe, recipe => recipe.ingredients, {
+    eager: true,
+  })
+  @JoinColumn()
+  recipe: Recipe
 
-  @ManyToOne(() => Ingredient)
-  ingredient_id: Ingredient
+  @ManyToOne(type => Ingredient, ingredient => ingredient.recipes, {
+    eager: true,
+  })
+  @JoinColumn()
+  ingredient: Ingredient
 
   @Column()
   quantity: number

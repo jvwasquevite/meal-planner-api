@@ -1,5 +1,7 @@
-import { Entity, PrimaryColumn, Column, OneToOne } from "typeorm"
+import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm"
 import { v4 as uuid } from "uuid"
+import { RecipeInstruction } from "./recipe_instruction"
+import { RecipeIngredient } from "./recipe_ingredient"
 
 @Entity("recipe")
 class Recipe {
@@ -14,6 +16,24 @@ class Recipe {
 
   @Column()
   hours: number
+
+  @OneToMany(
+    type => RecipeIngredient,
+    recipeIngredient => recipeIngredient.recipe,
+    {
+      cascade: true,
+    }
+  )
+  ingredients: RecipeIngredient[]
+
+  @OneToMany(
+    type => RecipeInstruction,
+    recipeInstruction => recipeInstruction.recipe,
+    {
+      cascade: true,
+    }
+  )
+  instructions: RecipeInstruction[]
 
   constructor() {
     if (!this.id) {
