@@ -4,6 +4,7 @@ import { CreateRecipeController } from "./controller/createRecipeController"
 import { CreateIngredientPricingController } from "./controller/createIngredientPricingController"
 import { CreateMealPlannerController } from "./controller/createMealPlanController"
 import { ListRecipesController } from "./controller/listRecipesController"
+import { getRecipeController } from "./controller/getRecipeController"
 
 const routes = Router()
 
@@ -15,6 +16,7 @@ routes.post(
 
 routes.post("/recipe", new CreateRecipeController().handle)
 routes.get("/recipes", new ListRecipesController().handle)
+routes.get("/getRecipe/:recipe_id", new getRecipeController().handle)
 
 routes.post("/mealplan", new CreateMealPlannerController().handle)
 
