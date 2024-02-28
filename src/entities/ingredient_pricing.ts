@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, NumericType, ManyToOne } from "typeorm"
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 
 import { Ingredient } from "./ingredient"
@@ -8,13 +8,17 @@ class IngredientPricing {
   @PrimaryColumn()
   readonly id: string
 
-  @ManyToOne(() => Ingredient)
-  ingredient_id: Ingredient
+  @Column()
+  ingredient_id: string
+
+  @JoinColumn({ name: "ingredient_id" })
+  @ManyToOne(type => Ingredient, ingredient => ingredient.pricings)
+  ingredient: Ingredient
 
   @Column()
   date: Date
 
-  @Column()
+  @Column({ type: "real" })
   price: number
 
   constructor() {

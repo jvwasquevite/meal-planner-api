@@ -11,6 +11,7 @@ import { v4 as uuid } from "uuid"
 import { IngredientUnits } from "./ingredient_units"
 import { IngredientMeasurements } from "./ingredient_measurements"
 import { RecipeIngredient } from "./recipe_ingredient"
+import { IngredientPricing } from "./ingredient_pricing"
 
 @Entity("ingredient")
 class Ingredient {
@@ -43,6 +44,13 @@ class Ingredient {
     }
   )
   recipes: RecipeIngredient[]
+
+  @OneToMany(
+    type => IngredientPricing,
+    ingredientPricing => ingredientPricing.ingredient,
+    { cascade: true }
+  )
+  pricings: IngredientPricing[]
 
   constructor() {
     if (!this.id) {
