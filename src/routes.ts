@@ -3,6 +3,7 @@ import { CreateIngredientController } from "./controller/createIngredientControl
 import { CreateRecipeController } from "./controller/createRecipeController"
 import { CreateIngredientPricingController } from "./controller/createIngredientPricingController"
 import { CreateMealPlannerController } from "./controller/createMealPlanController"
+import { ListRecipesController } from "./controller/listRecipesController"
 
 const routes = Router()
 
@@ -13,6 +14,7 @@ routes.post(
 )
 
 routes.post("/recipe", new CreateRecipeController().handle)
+routes.get("/recipes", new ListRecipesController().handle)
 
 routes.post("/mealplan", new CreateMealPlannerController().handle)
 

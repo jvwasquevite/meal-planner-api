@@ -9,16 +9,12 @@ class RecipeIngredient {
   @PrimaryColumn()
   readonly id: string
 
-  @ManyToOne(type => Recipe, recipe => recipe.ingredients, {
-    eager: true,
-  })
-  @JoinColumn()
+  @ManyToOne(type => Recipe, recipe => recipe.ingredients)
   recipe: Recipe
 
   @ManyToOne(type => Ingredient, ingredient => ingredient.recipes, {
     eager: true,
   })
-  @JoinColumn()
   ingredient: Ingredient
 
   @Column()

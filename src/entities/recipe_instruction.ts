@@ -8,9 +8,7 @@ class RecipeInstruction {
   @PrimaryColumn()
   readonly id: string
 
-  @ManyToOne(type => Recipe, recipe => recipe.instructions, {
-    eager: true,
-  })
+  @ManyToOne(type => Recipe, recipe => recipe.instructions)
   recipe: Recipe
 
   @Column()
