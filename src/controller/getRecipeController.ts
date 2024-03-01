@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { getRecipeUseCase } from "../useCases/getRecipeUseCase"
 
-export class getRecipeController {
+export class GetRecipeController {
   async handle(request: Request, response: Response) {
     const { recipe_id } = request.params
 
