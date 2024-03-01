@@ -7,11 +7,13 @@ import { ListRecipesController } from "./controller/listRecipesController"
 import { GetRecipeController } from "./controller/getRecipeController"
 import { ListMealPlanController } from "./controller/listMealPlansController"
 import { ListIngredientsController } from "./controller/listIngredientsController"
+import { GetIngredientByNameController } from "./controller/getIngredientByNameController"
 
 const routes = Router()
 
 routes.post("/ingredient", new CreateIngredientController().handle)
 routes.get("/ingredients", new ListIngredientsController().handle)
+routes.get("/ingredient/:name", new GetIngredientByNameController().handle)
 routes.post(
   "/pricing/:ingredient_id",
   new CreateIngredientPricingController().handle
