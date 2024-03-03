@@ -15,11 +15,27 @@ export class getRecipeUseCase {
       return new Error("Recipe does not exist")
     }
 
-    const recipe = await repo.find({
-      where: { id: recipe_id },
-      relations: ["ingredients", "instructions"],
+    const recipe = await repo
+      .createQueryBuilder("recipe")
+      .leftJoinAndSelect("recipe.ingredients", "recipe_ingredient")
+      .leftJoinAndSelect("recipe_ingredient.ingredient", "ingredient")
+      .where("recipe.id = :id", { id: recipe_id })
+      .getOne()
+
+    // Extract ingredients with IDs, names, and quantities
+    const ingredients = recipe.ingredients.map(recipeIngredient => {
+      return {
+        id: recipeIngredient.ingredient.id,
+        name: recipeIngredient.ingredient.name,
+        quantity: recipeIngredient.quantity,
+      }
     })
 
-    return recipe
+    const recipeJson = JSON.stringify({
+      ...recipe,
+      ingredients: ingredients,
+    })
+
+    return JSON.parse(recipeJson)
   }
 }
