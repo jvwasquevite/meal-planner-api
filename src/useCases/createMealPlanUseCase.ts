@@ -1,19 +1,18 @@
-import { Timestamp } from "typeorm"
 import { Database } from "../database"
 
-import { MealPlan } from "../entities/meal_plan"
-import { Weekday } from "../entities/weekday"
+import { MealPlan } from "../entities/mealplan"
+import { MealPlanRecipe } from "../entities/mealplan_recipe"
 
 type MealPlanRequest = {
   name: string
-  weekdays: Weekday[]
+  recipes: MealPlanRecipe[]
 }
 
 export class createMealPlanUseCase {
-  async execute({ name, weekdays }: MealPlanRequest): Promise<MealPlan> {
+  async execute({ name, recipes }: MealPlanRequest): Promise<MealPlan> {
     const repo = Database.getRepository(MealPlan)
 
-    const mealPlan = repo.create({ name, weekdays })
+    const mealPlan = repo.create({ name, recipes })
 
     await repo.save(mealPlan)
 

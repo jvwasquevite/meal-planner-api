@@ -3,11 +3,11 @@ import { createMealPlanUseCase } from "../useCases/createMealPlanUseCase"
 
 export class CreateMealPlannerController {
   async handle(request: Request, response: Response) {
-    const { name, weekdays } = request.body
+    const { name, recipes } = request.body
 
     const useCase = new createMealPlanUseCase()
 
-    const result = await useCase.execute({ name, weekdays })
+    const result = await useCase.execute({ name, recipes })
 
     return response.json(result)
   }

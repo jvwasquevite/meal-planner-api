@@ -2,6 +2,7 @@ import { Entity, PrimaryColumn, Column, OneToMany } from "typeorm"
 import { v4 as uuid } from "uuid"
 import { RecipeInstruction } from "./recipe_instruction"
 import { RecipeIngredient } from "./recipe_ingredient"
+import { MealPlanRecipe } from "./mealplan_recipe"
 
 @Entity("recipe")
 class Recipe {
@@ -34,6 +35,9 @@ class Recipe {
     }
   )
   instructions: RecipeInstruction[]
+
+  @OneToMany(type => MealPlanRecipe, mealplanRecipe => mealplanRecipe.recipe)
+  mealplans: MealPlanRecipe[]
 
   constructor() {
     if (!this.id) {

@@ -6,7 +6,7 @@ export class listRecipesUseCase {
     const repo = Database.getRepository(Recipe)
 
     const recipes = await repo.find({
-      relations: ["ingredients", "instructions"],
+      relations: ["ingredients", "instructions", "mealplans"],
     })
 
     return recipes
