@@ -16,8 +16,6 @@ export class listMealPlanRecipesUseCase {
       relations: ["recipe"],
     })
 
-    const recipesNames = recipes.map(recipe => recipe.recipe.name)
-
-    return recipesNames
+    return recipes
   }
 }
