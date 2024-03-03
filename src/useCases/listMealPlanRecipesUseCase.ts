@@ -11,12 +11,15 @@ export class listMealPlanRecipesUseCase {
   async execute({ mealplan_id }: listMealPlanIngredientsRequest) {
     const repo = Database.getRepository(MealPlanRecipe)
 
-    const recipes = await repo
-      .createQueryBuilder("mealplan_recipe")
-      .leftJoinAndMapMany("recipes", "mealplan_recipe.recipe", "recipe.id")
-      .where("mealplan_recipe.mealplanId = :mealplan_id", { mealplan_id })
-      .getMany()
+    const recipes = await repo.find({
+      where: {
+        mealplan: { id: mealplan_id },
+      },
+      relations: ["recipe"],
+    })
 
-    return recipes
+    const recipesNames = recipes.map(recipe => recipe.recipe.name)
+
+    return recipesNames
   }
 }
