@@ -9,6 +9,7 @@ import { ListMealPlanController } from "./controller/listMealPlansController"
 import { ListIngredientsController } from "./controller/listIngredientsController"
 import { GetIngredientByNameController } from "./controller/getIngredientByNameController"
 import { listMealPlanRecipesController } from "./controller/listMealPlanRecipesController"
+import { listMealPlanIngredientsController } from "./controller/listMealPlanIngredientsController"
 
 const routes = Router()
 
@@ -29,6 +30,10 @@ routes.get("/mealplans", new ListMealPlanController().handle)
 routes.get(
   "/mealplan/recipes/:mealplan_id",
   new listMealPlanRecipesController().handle
+)
+routes.get(
+  "/mealplan/ingredients/:mealplan_id",
+  new listMealPlanIngredientsController().handle
 )
 
 export { routes }
