@@ -1,14 +1,12 @@
 import { Database } from "../database"
-import { MealPlan } from "../entities/mealplan"
 import { MealPlanRecipe } from "../entities/mealplan_recipe"
-import { Recipe } from "../entities/recipe"
 
-type listMealPlanIngredientsRequest = {
+type listMealPlanRecipesRequest = {
   mealplan_id: string
 }
 
 export class listMealPlanRecipesUseCase {
-  async execute({ mealplan_id }: listMealPlanIngredientsRequest) {
+  async execute({ mealplan_id }: listMealPlanRecipesRequest) {
     const repo = Database.getRepository(MealPlanRecipe)
 
     const recipes = await repo.find({
