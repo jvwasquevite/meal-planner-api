@@ -10,10 +10,12 @@ import { ListIngredientsController } from "./controller/listIngredientsControlle
 import { GetIngredientByNameController } from "./controller/getIngredientByNameController"
 import { listMealPlanRecipesController } from "./controller/listMealPlanRecipesController"
 import { listMealPlanIngredientsController } from "./controller/listMealPlanIngredientsController"
+import { CreateIngredientInBatchController } from "./controller/createIngredientsInBatchController"
 
 const routes = Router()
 
 routes.post("/ingredient", new CreateIngredientController().handle)
+routes.post("/ingredients", new CreateIngredientInBatchController().handle)
 routes.get("/ingredients", new ListIngredientsController().handle)
 routes.get("/ingredient/:name", new GetIngredientByNameController().handle)
 routes.post(
