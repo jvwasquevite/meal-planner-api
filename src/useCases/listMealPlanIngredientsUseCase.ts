@@ -1,6 +1,5 @@
 import { Database } from "../database"
 import { MealPlan } from "../entities/mealplan"
-import { convertIngredientQuantity } from "../middleware/convertIngredientQuantity"
 
 type listMealPlanIngredientsRequest = {
   mealplan_id: string
@@ -21,32 +20,22 @@ export class listMealPlanIngredientsUseCase {
 
     const mealPlanIngredients = []
 
-    // mealPlan.recipes.forEach(mealPlanRecipe => {
-    //   mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
-    //     const existingIngredient = mealPlanIngredients.find(
-    //       ingredient => ingredient.id === recipeIngredient.ingredient.id
-    //     )
-    //     if (!existingIngredient) {
-    //       mealPlanIngredients.push({
-    //         id: recipeIngredient.ingredient.id,
-    //         name: recipeIngredient.ingredient.name,
-    //         quantity: await convertIngredientQuantity({
-    //           ingredient_id: recipeIngredient.ingredient.id,
-    //           quantity: recipeIngredient.quantity,
-    //           measurement: recipeIngredient.measurement,
-    //         }),
-    //       })
-    //     } else {
-    //       existingIngredient.quantity += await convertIngredientQuantity({
-    //         ingredient_id: recipeIngredient.ingredient.id,
-    //         quantity: recipeIngredient.quantity,
-    //         measurement: recipeIngredient.measurement,
-    //       })
-    //     }
-    //   })
-    // })
-
-    console.log(mealPlanIngredients)
+    mealPlan.recipes.forEach(mealPlanRecipe => {
+      mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
+        const existingIngredient = mealPlanIngredients.find(
+          ingredient => ingredient.id === recipeIngredient.ingredient.id
+        )
+        if (!existingIngredient) {
+          mealPlanIngredients.push({
+            id: recipeIngredient.ingredient.id,
+            name: recipeIngredient.ingredient.name,
+            quantity: recipeIngredient.converted_quantity,
+          })
+        } else {
+          existingIngredient.quantity += recipeIngredient.converted_quantity
+        }
+      })
+    })
 
     return mealPlanIngredients
   }
