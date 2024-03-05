@@ -20,6 +20,8 @@ export class listRecipesUseCase {
             id: recipeIngredient.ingredient.id,
             name: recipeIngredient.ingredient.name,
             quantity: recipeIngredient.quantity,
+            converted_quantity: recipeIngredient.converted_quantity,
+            measurement: recipeIngredient.measurement_unit,
           }
         })
 

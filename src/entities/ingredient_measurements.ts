@@ -1,10 +1,14 @@
-import { Entity, PrimaryColumn, Column } from "typeorm"
+import { Entity, PrimaryColumn, Column, OneToOne } from "typeorm"
 import { v4 as uuid } from "uuid"
+import { Ingredient } from "./ingredient"
 
 @Entity("ingredient_measurements")
 class IngredientMeasurements {
   @PrimaryColumn()
   readonly id: string
+
+  @OneToOne(type => Ingredient, ingredient => ingredient.measurements)
+  ingredient: Ingredient
 
   @Column()
   max_weight: number

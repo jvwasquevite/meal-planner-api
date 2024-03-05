@@ -20,6 +20,12 @@ class RecipeIngredient {
   @Column()
   quantity: number
 
+  @Column()
+  measurement_unit: string
+
+  @Column({ nullable: true })
+  converted_quantity: number
+
   constructor() {
     if (!this.id) {
       this.id = uuid()

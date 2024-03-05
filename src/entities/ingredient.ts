@@ -30,9 +30,13 @@ class Ingredient {
   @JoinColumn()
   units: IngredientUnits
 
-  @OneToOne(type => IngredientMeasurements, {
-    cascade: true,
-  })
+  @OneToOne(
+    type => IngredientMeasurements,
+    ingredientMeasurements => ingredientMeasurements.ingredient,
+    {
+      cascade: true,
+    }
+  )
   @JoinColumn()
   measurements: IngredientMeasurements
 

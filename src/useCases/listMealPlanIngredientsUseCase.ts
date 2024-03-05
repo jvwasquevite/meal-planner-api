@@ -1,5 +1,6 @@
 import { Database } from "../database"
 import { MealPlan } from "../entities/mealplan"
+import { convertIngredientQuantity } from "../middleware/convertIngredientQuantity"
 
 type listMealPlanIngredientsRequest = {
   mealplan_id: string
@@ -18,29 +19,34 @@ export class listMealPlanIngredientsUseCase {
       .where("mealplan.id = :id", { id: mealplan_id })
       .getOne()
 
-    // Initialize an array to store aggregated ingredients
     const mealPlanIngredients = []
 
-    // Iterate over each recipe in the meal plan
-    mealPlan.recipes.forEach(mealPlanRecipe => {
-      // Iterate over each ingredient in the recipe
-      mealPlanRecipe.recipe.ingredients.forEach(recipeIngredient => {
-        // Check if the ingredient is already included, if not, add it to the aggregated list
-        const existingIngredient = mealPlanIngredients.find(
-          ingredient => ingredient.id === recipeIngredient.ingredient.id
-        )
-        if (!existingIngredient) {
-          mealPlanIngredients.push({
-            id: recipeIngredient.ingredient.id,
-            name: recipeIngredient.ingredient.name,
-            quantity: recipeIngredient.quantity,
-          })
-        } else {
-          // If the ingredient already exists, update its quantity
-          existingIngredient.quantity += recipeIngredient.quantity
-        }
-      })
-    })
+    // mealPlan.recipes.forEach(mealPlanRecipe => {
+    //   mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
+    //     const existingIngredient = mealPlanIngredients.find(
+    //       ingredient => ingredient.id === recipeIngredient.ingredient.id
+    //     )
+    //     if (!existingIngredient) {
+    //       mealPlanIngredients.push({
+    //         id: recipeIngredient.ingredient.id,
+    //         name: recipeIngredient.ingredient.name,
+    //         quantity: await convertIngredientQuantity({
+    //           ingredient_id: recipeIngredient.ingredient.id,
+    //           quantity: recipeIngredient.quantity,
+    //           measurement: recipeIngredient.measurement,
+    //         }),
+    //       })
+    //     } else {
+    //       existingIngredient.quantity += await convertIngredientQuantity({
+    //         ingredient_id: recipeIngredient.ingredient.id,
+    //         quantity: recipeIngredient.quantity,
+    //         measurement: recipeIngredient.measurement,
+    //       })
+    //     }
+    //   })
+    // })
+
+    console.log(mealPlanIngredients)
 
     return mealPlanIngredients
   }
