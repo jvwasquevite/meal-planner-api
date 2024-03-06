@@ -18,7 +18,7 @@ class IngredientPricing {
   @Column()
   date: Date
 
-  @Column({ type: "real" })
+  @Column({ type: "numeric" })
   price: number
 
   constructor() {
