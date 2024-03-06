@@ -11,6 +11,7 @@ import { GetIngredientByNameController } from "./controller/getIngredientByNameC
 import { listMealPlanRecipesController } from "./controller/listMealPlanRecipesController"
 import { listMealPlanIngredientsController } from "./controller/listMealPlanIngredientsController"
 import { CreateIngredientInBatchController } from "./controller/createIngredientsInBatchController"
+import { GetMealPlanController } from "./controller/getMealPlanController"
 
 const routes = Router()
 
@@ -29,6 +30,7 @@ routes.get("/recipe/:recipe_id", new GetRecipeController().handle)
 
 routes.post("/mealplan", new CreateMealPlannerController().handle)
 routes.get("/mealplans", new ListMealPlanController().handle)
+routes.get("/mealplan/:id", new GetMealPlanController().handle)
 routes.get(
   "/mealplan/recipes/:mealplan_id",
   new listMealPlanRecipesController().handle
