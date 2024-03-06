@@ -24,6 +24,10 @@ export class getRecipeUseCase {
       .where("recipe.id = :id", { id: recipe_id })
       .getOne()
 
+    // Parse time notation to :h and :min strings
+    var hours = recipe.hours.split(":")
+    recipe.hours = hours[0] == "00" ? hours[1] + " min" : hours[0] + "h"
+
     // Extract ingredients with IDs, names, and quantities
     const ingredients = recipe.ingredients.map(recipeIngredient => {
       return {

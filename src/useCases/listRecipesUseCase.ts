@@ -12,7 +12,13 @@ export class listRecipesUseCase {
       .leftJoinAndSelect("recipe.instructions", "instruction")
       .getMany()
 
-    // Convert recipes to JSON with ingredients and instructions minified for each recipe
+    // Parse time notation to :h and :min strings
+    recipes.map(recipe => {
+      var hours = recipe.hours.split(":")
+      recipe.hours = hours[0] == "00" ? hours[1] + " min" : hours[0] + "h"
+    })
+
+    // Minify recipe ingredients and instructions
     const recipesWithIngredientsAndInstructionsMinified = recipes.map(
       recipe => {
         const ingredients = recipe.ingredients.map(recipeIngredient => {
