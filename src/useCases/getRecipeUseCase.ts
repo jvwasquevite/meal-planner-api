@@ -30,10 +30,26 @@ export class getRecipeUseCase {
 
     // Extract ingredients with IDs, names, and quantities
     const ingredients = recipe.ingredients.map(recipeIngredient => {
+      const measurement_unit = {
+        "Colher de sopa":
+          recipeIngredient.quantity > 1
+            ? " colheres de sopa"
+            : " colher de sopa",
+        "Xícara de chá":
+          recipeIngredient.quantity > 1 ? " xícaras de chá" : " xícara de chá",
+        Copo: recipeIngredient.quantity > 1 ? " copos" : " copo",
+        Unidade: recipeIngredient.quantity > 1 ? " unidades" : " unidade",
+        Gramas: "g",
+        Mililitros: "ml",
+      }
+
       return {
         id: recipeIngredient.ingredient.id,
         name: recipeIngredient.ingredient.name,
         quantity: recipeIngredient.quantity,
+        formatted_quantity:
+          recipeIngredient.quantity +
+          measurement_unit[recipeIngredient.measurement_unit],
         converted_quantity: recipeIngredient.converted_quantity,
         measurement: recipeIngredient.measurement_unit,
       }
