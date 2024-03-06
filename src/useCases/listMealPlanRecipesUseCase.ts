@@ -9,12 +9,14 @@ export class listMealPlanRecipesUseCase {
   async execute({ mealplan_id }: listMealPlanRecipesRequest) {
     const repo = Database.getRepository(MealPlanRecipe)
 
-    const recipes = await repo.find({
+    const mealPlanRecipes = await repo.find({
       where: {
         mealplan: { id: mealplan_id },
       },
       relations: ["recipe"],
     })
+
+    const recipes = mealPlanRecipes.map(mealPlanRecipe => mealPlanRecipe.recipe)
 
     return recipes
   }
