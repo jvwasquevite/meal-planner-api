@@ -15,8 +15,8 @@ class Recipe {
   @Column()
   servings: number
 
-  @Column("numeric")
-  hours: number
+  @Column("time")
+  hours: Date
 
   @OneToMany(
     type => RecipeIngredient,

@@ -9,7 +9,7 @@ import { RecipeInstruction } from "../entities/recipe_instruction"
 type RecipeRequest = {
   name: string
   servings: number
-  hours: number
+  hours: string
   ingredients: {
     ingredient: Ingredient
     quantity: number
