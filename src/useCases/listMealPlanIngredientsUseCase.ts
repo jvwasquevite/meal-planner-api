@@ -23,6 +23,8 @@ export class listMealPlanIngredientsUseCase {
 
     mealPlan.recipes.forEach(mealPlanRecipe => {
       mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
+        const ingredient = recipeIngredient.ingredient
+
         const existingIngredient = mealPlanIngredients.find(
           ingredient => ingredient.id === recipeIngredient.ingredient.id
         )
