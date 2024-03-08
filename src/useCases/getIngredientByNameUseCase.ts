@@ -11,7 +11,7 @@ export class GetIngredientByNameUseCase {
   async execute({ name }: getIngredientByNameRequest) {
     const repo = Database.getRepository(Ingredient)
 
-    const ingredient = await repo.findBy({ name: ILike(name) })
+    const ingredient = await repo.findOneBy({ name: ILike(name) })
 
     return ingredient
   }
