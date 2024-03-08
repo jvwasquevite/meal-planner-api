@@ -1,4 +1,5 @@
 import { Database } from "../database"
+import { Ingredient } from "../entities/ingredient"
 import { MealPlan } from "../entities/mealplan"
 
 type listMealPlanIngredientsRequest = {
@@ -8,6 +9,7 @@ type listMealPlanIngredientsRequest = {
 export class listMealPlanIngredientsUseCase {
   async execute({ mealplan_id }: listMealPlanIngredientsRequest) {
     const repo = Database.getRepository(MealPlan)
+    const ingredientRepo = Database.getRepository(Ingredient)
 
     const mealPlan = await repo
       .createQueryBuilder("mealplan")
@@ -16,6 +18,7 @@ export class listMealPlanIngredientsUseCase {
       .leftJoinAndSelect("recipe.ingredients", "ingredients")
       .leftJoinAndSelect("ingredients.ingredient", "ingredient")
       .leftJoinAndSelect("ingredient.units", "units")
+      .leftJoinAndSelect("ingredient.pricings", "pricings")
       .where("mealplan.id = :id", { id: mealplan_id })
       .getOne()
 
@@ -23,45 +26,55 @@ export class listMealPlanIngredientsUseCase {
 
     mealPlan.recipes.forEach(mealPlanRecipe => {
       mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
-        const ingredient = recipeIngredient.ingredient
-
         const existingIngredient = mealPlanIngredients.find(
           ingredient => ingredient.id === recipeIngredient.ingredient.id
         )
+
+        const numberToCurrency = new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        })
 
         if (!existingIngredient) {
           mealPlanIngredients.push({
             id: recipeIngredient.ingredient.id,
             name: recipeIngredient.ingredient.name,
-            consumption_unit:
-              recipeIngredient.ingredient.units.consumption_unit,
             quantity: recipeIngredient.converted_quantity,
+            pricings: {
+              minimum: numberToCurrency
+                .format(recipeIngredient.ingredient.pricings.minimum)
+                .replace(/\s/, ""),
+              maximum: numberToCurrency
+                .format(recipeIngredient.ingredient.pricings.maximum)
+                .replace(/\s/, ""),
+              average: numberToCurrency
+                .format(recipeIngredient.ingredient.pricings.average)
+                .replace(/\s/, ""),
+            },
           })
         } else {
           existingIngredient.quantity += recipeIngredient.converted_quantity
         }
-
-        mealPlanIngredients.forEach(
-          async ingredient =>
-            (ingredient["formatted_quantity"] = await this.format_quantity(
-              ingredient.quantity,
-              ingredient.consumption_unit
-            ))
-        )
       })
     })
 
-    return mealPlanIngredients
-  }
+    for (let mealPlanIngredient of mealPlanIngredients) {
+      const consumption_units = {
+        "Peso sólido": "g",
+        "Peso líquido": "ml",
+        Unidade: mealPlanIngredient.quantity > 1 ? " unidades" : " unidade",
+        Fatia: mealPlanIngredient.quantity > 1 ? " fatias" : " fatia",
+      }
 
-  format_quantity(quantity, consumption_unit) {
-    const consumption_units = {
-      "Peso sólido": "g",
-      "Peso líquido": "ml",
-      Unidade: quantity > 1 ? " unidades" : " unidade",
-      Fatia: quantity > 1 ? " fatias" : " fatia",
+      const ingredient = await ingredientRepo.findOne({
+        where: { id: mealPlanIngredient.id },
+        relations: ["units"],
+      })
+
+      mealPlanIngredient.quantity +=
+        consumption_units[ingredient.units.consumption_unit]
     }
 
-    return quantity + consumption_units[consumption_unit]
+    return mealPlanIngredients
   }
 }

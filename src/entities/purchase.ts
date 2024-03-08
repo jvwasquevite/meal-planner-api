@@ -1,6 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm"
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from "typeorm"
 import { v4 as uuid } from "uuid"
-import { Ingredient } from "./ingredient"
 import { IngredientPurchase } from "./ingredient_purchase"
 
 @Entity("purchase")
@@ -8,10 +13,13 @@ class Purchase {
   @PrimaryColumn()
   readonly id: string
 
-  @Column()
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)",
+  })
   date: Date
 
-  @Column({ type: "numeric" })
+  @Column({ type: "numeric", nullable: true })
   total_spent: number
 
   @OneToMany(
@@ -19,7 +27,7 @@ class Purchase {
     ingredentPurchase => ingredentPurchase.purchase,
     { cascade: true }
   )
-  ingredients: Ingredient[]
+  ingredients: IngredientPurchase[]
 
   constructor() {
     if (!this.id) {

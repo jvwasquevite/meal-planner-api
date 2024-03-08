@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryColumn } from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm"
 import { v4 as uuid } from "uuid"
 import { Purchase } from "./purchase"
 import { Ingredient } from "./ingredient"
@@ -13,6 +13,9 @@ class IngredientPurchase {
 
   @ManyToOne(type => Purchase, purchase => purchase.ingredients)
   purchase: Purchase
+
+  @Column({ type: "numeric" })
+  price: number
 
   constructor() {
     if (!this.id) {

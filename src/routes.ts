@@ -11,6 +11,8 @@ import { listMealPlanRecipesController } from "./controller/listMealPlanRecipesC
 import { listMealPlanIngredientsController } from "./controller/listMealPlanIngredientsController"
 import { CreateIngredientInBatchController } from "./controller/createIngredientsInBatchController"
 import { GetMealPlanController } from "./controller/getMealPlanController"
+import { CreatePurchaseController } from "./controller/createPurchaseController"
+import { updateIngredientPricings } from "./middlewares/updateIngredientPricings"
 
 const routes = Router()
 
@@ -32,7 +34,10 @@ routes.get(
 )
 routes.get(
   "/mealplan/ingredients/:mealplan_id",
+  updateIngredientPricings,
   new listMealPlanIngredientsController().handle
 )
+
+routes.post("/purchase", new CreatePurchaseController().handle)
 
 export { routes }

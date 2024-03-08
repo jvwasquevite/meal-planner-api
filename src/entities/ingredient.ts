@@ -59,11 +59,11 @@ class Ingredient {
 
   @OneToOne(
     type => IngredientPricings,
-    ingredientPricings => ingredientPricings.ingredient,
+    ingredientPricings => ingredientPricings.id,
     { cascade: true }
   )
   @JoinColumn()
-  pricings: IngredientPricings[]
+  pricings: IngredientPricings
 
   constructor() {
     if (!this.id) {
