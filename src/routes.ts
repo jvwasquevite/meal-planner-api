@@ -13,6 +13,7 @@ import { CreateIngredientInBatchController } from "./controller/createIngredient
 import { GetMealPlanController } from "./controller/getMealPlanController"
 import { CreatePurchaseController } from "./controller/createPurchaseController"
 import { updateIngredientPricings } from "./middlewares/updateIngredientPricings"
+import { CreateRecipesInBatchController } from "./controller/createRecipesInBatchController"
 
 const routes = Router()
 
@@ -22,6 +23,7 @@ routes.get("/ingredients", new ListIngredientsController().handle)
 routes.get("/ingredient/:name", new GetIngredientByNameController().handle)
 
 routes.post("/recipe", new CreateRecipeController().handle)
+routes.post("/recipes", new CreateRecipesInBatchController().handle)
 routes.get("/recipes", new ListRecipesController().handle)
 routes.get("/recipe/:recipe_id", new GetRecipeController().handle)
 
