@@ -11,15 +11,22 @@ export class CreatePurchaseUseCase {
     const purchase = repo.create()
     await repo.save(purchase)
 
-    purchaseItems.map(async item => {
-      const purchaseItem = ingredientPurchaseRepo.create({
-        purchase,
-        ingredient: item.ingredient,
-        price: item.price,
-      })
+    await Promise.all(
+      purchaseItems.map(async item => {
+        const purchaseItem = ingredientPurchaseRepo.create({
+          purchase,
+          ingredient: item.ingredient,
+          price: item.price,
+        })
 
-      await ingredientPurchaseRepo.save(purchaseItem)
-    })
+        await ingredientPurchaseRepo.save(purchaseItem)
+      })
+    )
+
+    const totalSpent = purchaseItems.reduce((acc, item) => acc + item.price, 0)
+
+    purchase.total_spent = totalSpent
+    await repo.save(purchase)
 
     return purchase
   }
