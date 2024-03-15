@@ -71,10 +71,23 @@ export class listMealPlanIngredientsUseCase {
         relations: ["units"],
       })
 
+      mealPlanIngredient.pricing_per_quantity = parseFloat(
+        mealPlanIngredient.pricings.average
+      )
+
       mealPlanIngredient.quantity +=
         consumption_units[ingredient.units.consumption_unit]
     }
 
-    return mealPlanIngredients
+    return mealPlan
+  }
+
+  getTotalPrevistCostPerIngredient(
+    average: number,
+    quantity: number,
+    quantity_per_sales_unit,
+    number
+  ) {
+    return average * Math.ceil(quantity / quantity_per_sales_unit)
   }
 }
