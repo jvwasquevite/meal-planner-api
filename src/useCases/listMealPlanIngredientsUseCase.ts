@@ -24,22 +24,23 @@ export class listMealPlanIngredientsUseCase {
 
     const mealPlanIngredients = []
 
+    const numberToCurrency = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    })
+
     mealPlan.recipes.forEach(mealPlanRecipe => {
-      mealPlanRecipe.recipe.ingredients.forEach(async recipeIngredient => {
+      mealPlanRecipe.recipe.ingredients.forEach(recipeIngredient => {
         const existingIngredient = mealPlanIngredients.find(
           ingredient => ingredient.id === recipeIngredient.ingredient.id
         )
-
-        const numberToCurrency = new Intl.NumberFormat("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        })
 
         if (!existingIngredient) {
           mealPlanIngredients.push({
             id: recipeIngredient.ingredient.id,
             name: recipeIngredient.ingredient.name,
-            quantity: recipeIngredient.converted_quantity,
+            quantity: null,
+            previst_cost: null,
             pricings: {
               minimum: numberToCurrency
                 .format(recipeIngredient.ingredient.pricings.minimum)
@@ -52,6 +53,23 @@ export class listMealPlanIngredientsUseCase {
                 .replace(/\s/, ""),
             },
           })
+        }
+      })
+    })
+
+    const mealPlanIngredientsQuantity = []
+
+    mealPlan.recipes.forEach(mealPlanRecipe => {
+      mealPlanRecipe.recipe.ingredients.forEach(recipeIngredient => {
+        const existingIngredient = mealPlanIngredientsQuantity.find(
+          ingredient => ingredient.id === recipeIngredient.ingredient.id
+        )
+
+        if (!existingIngredient) {
+          mealPlanIngredientsQuantity.push({
+            id: recipeIngredient.ingredient.id,
+            quantity: recipeIngredient.converted_quantity,
+          })
         } else {
           existingIngredient.quantity += recipeIngredient.converted_quantity
         }
@@ -59,6 +77,11 @@ export class listMealPlanIngredientsUseCase {
     })
 
     for (let mealPlanIngredient of mealPlanIngredients) {
+      const ingredient = await ingredientRepo.findOne({
+        where: { id: mealPlanIngredient.id },
+        relations: ["pricings", "units"],
+      })
+
       const consumption_units = {
         "Peso sólido": "g",
         "Peso líquido": "ml",
@@ -66,28 +89,21 @@ export class listMealPlanIngredientsUseCase {
         Fatia: mealPlanIngredient.quantity > 1 ? " fatias" : " fatia",
       }
 
-      const ingredient = await ingredientRepo.findOne({
-        where: { id: mealPlanIngredient.id },
-        relations: ["units"],
-      })
+      const quantity = await mealPlanIngredientsQuantity.find(
+        ingredient => ingredient.id === mealPlanIngredient.id
+      ).quantity
 
-      mealPlanIngredient.pricing_per_quantity = parseFloat(
-        mealPlanIngredient.pricings.average
-      )
+      mealPlanIngredient.quantity =
+        quantity + consumption_units[ingredient.units.consumption_unit]
 
-      mealPlanIngredient.quantity +=
-        consumption_units[ingredient.units.consumption_unit]
+      mealPlanIngredient.previst_cost = numberToCurrency
+        .format(
+          Math.ceil(quantity / ingredient.units.quantity_per_sales_unit) *
+            ingredient.pricings.average
+        )
+        .replace(/\s/, "")
     }
 
-    return mealPlan
-  }
-
-  getTotalPrevistCostPerIngredient(
-    average: number,
-    quantity: number,
-    quantity_per_sales_unit,
-    number
-  ) {
-    return average * Math.ceil(quantity / quantity_per_sales_unit)
+    return mealPlanIngredients
   }
 }
